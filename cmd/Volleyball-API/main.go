@@ -24,6 +24,9 @@ func main() {
 	//players methods
 	router.HandleFunc("/VolleyballAPI/players", methods.GetPlayers).Methods("GET")
 	router.HandleFunc("/VolleyballAPI/player/{id}", methods.GetPlayer).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/player/create", methods.CreatePlayer).Methods("POST")
+	router.HandleFunc("/VolleyballAPI/player/delete/{id}", methods.DeletePlayer).Methods("DELETE")
+	router.HandleFunc("/VolleyballAPI/player/update/{id}", methods.UpdatePlayer).Methods("PUT")
 
 	//start api
 	http.ListenAndServe(":8080", router)
