@@ -15,14 +15,15 @@ func main() {
 	router := mux.NewRouter()
 
 	//teams methods
-	router.HandleFunc("/teams", methods.GetTeams).Methods("GET")
-	router.HandleFunc("/team/{id}", methods.GetTeam).Methods("GET")
-	router.HandleFunc("/team/create", methods.CreateTeam).Methods("POST")
-	router.HandleFunc("/team/delete/{id}", methods.DeleteTeam).Methods("DELETE")
-	router.HandleFunc("/team/update/{id}", methods.UpdateTeam).Methods("PUT")
+	router.HandleFunc("/VolleyballAPI/teams", methods.GetTeams).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/team/{id}", methods.GetTeam).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/team/create", methods.CreateTeam).Methods("POST")
+	router.HandleFunc("/VolleyballAPI/team/delete/{id}", methods.DeleteTeam).Methods("DELETE")
+	router.HandleFunc("/VolleyballAPI/team/update/{id}", methods.UpdateTeam).Methods("PUT")
 
 	//players methods
-	router.HandleFunc("/players", methods.GetPlayers).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/players", methods.GetPlayers).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/player/{id}", methods.GetPlayer).Methods("GET")
 
 	//start api
 	http.ListenAndServe(":8080", router)

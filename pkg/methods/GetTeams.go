@@ -20,10 +20,5 @@ func GetTeams(w http.ResponseWriter, r *http.Request) {
 	database.Db.Find(&teams)
 
 	//writing response
-	jsonResponse, err := json.Marshal(teams)
-	if err != nil {
-		return
-	}
-
-	w.Write(jsonResponse)
+	json.NewEncoder(w).Encode(&teams)
 }

@@ -8,9 +8,11 @@ import (
 )
 
 func GetPlayers(w http.ResponseWriter, r *http.Request) {
+	//json response and status
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 
+	//getting all players from database
 	var players []essences.Player
 	database.Db.Find(&players)
 
