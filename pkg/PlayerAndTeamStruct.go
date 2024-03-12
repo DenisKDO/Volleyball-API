@@ -22,3 +22,4 @@ type Team struct {
 	Coach   string
 	Players []Player
 }
+
