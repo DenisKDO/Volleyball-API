@@ -2,7 +2,7 @@ package database
 
 import (
 	"fmt"
-	"github.com/DenisKDO/Vollyball-API/pkg"
+	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
@@ -11,7 +11,7 @@ import (
 )
 
 var err error
-var db *gorm.DB
+var Db *gorm.DB
 
 func Database() {
 	//loading enviroment variables to the system
@@ -30,17 +30,24 @@ func Database() {
 	dbURI := fmt.Sprintf("host=%s user=%s dbname=%s sslmode=disable password=%s port=%s", host, user, dbName, password, dbPort)
 
 	//Opening connection to database
-	db, err = gorm.Open(dialect, dbURI)
+	Db, err = gorm.Open(dialect, dbURI)
 	if err != nil {
 		log.Fatal(err)
 	} else {
 		fmt.Println("Successfully connected to database")
 	}
 
-	//Closing connection to database
-	defer db.Close()
-
 	//migrations to the database
-	db.AutoMigrate(&pkg.Player{})
-	db.AutoMigrate(&pkg.Team{})
+	Db.AutoMigrate(&essences.Player{})
+	Db.AutoMigrate(&essences.Team{})
+
+	//Once created Teams in database from PreparingTeamsAndPlayers pkg
+	//Db.Create(PreparingTeamsAndPlayers.JapanNationalVolleyballTeam())
+	//Db.Create(PreparingTeamsAndPlayers.RussiaNationalVolleyballTeam())
+	//for idx := range PreparingTeamsAndPlayers.JapanPlayers() {
+	//	Db.Create(&PreparingTeamsAndPlayers.JapanPlayers()[idx])
+	//}
+	//for idx := range PreparingTeamsAndPlayers.RussiaPlayers() {
+	//	Db.Create(&PreparingTeamsAndPlayers.RussiaPlayers()[idx])
+	//}
 }
