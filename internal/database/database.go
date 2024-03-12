@@ -2,6 +2,7 @@ package database
 
 import (
 	"fmt"
+	"github.com/DenisKDO/Vollyball-API/pkg/PreparingTeamsAndPlayers"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -42,12 +43,12 @@ func Database() {
 	Db.AutoMigrate(&essences.Team{})
 
 	//Once created Teams in database from PreparingTeamsAndPlayers pkg
-	//Db.Create(PreparingTeamsAndPlayers.JapanNationalVolleyballTeam())
-	//Db.Create(PreparingTeamsAndPlayers.RussiaNationalVolleyballTeam())
-	//for idx := range PreparingTeamsAndPlayers.JapanPlayers() {
-	//	Db.Create(&PreparingTeamsAndPlayers.JapanPlayers()[idx])
-	//}
-	//for idx := range PreparingTeamsAndPlayers.RussiaPlayers() {
-	//	Db.Create(&PreparingTeamsAndPlayers.RussiaPlayers()[idx])
-	//}
+	Db.Create(PreparingTeamsAndPlayers.JapanNationalVolleyballTeam())
+	Db.Create(PreparingTeamsAndPlayers.RussiaNationalVolleyballTeam())
+	for idx := range PreparingTeamsAndPlayers.JapanPlayers() {
+		Db.Create(&PreparingTeamsAndPlayers.JapanPlayers()[idx])
+	}
+	for idx := range PreparingTeamsAndPlayers.RussiaPlayers() {
+		Db.Create(&PreparingTeamsAndPlayers.RussiaPlayers()[idx])
+	}
 }

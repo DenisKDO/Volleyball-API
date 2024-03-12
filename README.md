@@ -6,14 +6,14 @@ their national teams and volleyball tournaments. Also in this API you can regist
 Key Features:
 
     1.Team management:
-        - View lists of modern teams by index
+        - View lists of modern teams by id (in future we add more teams)
         - Viewing team lineups
-        - Creating new commands (if desired)
-        - Updating the Command Database
+        - Creating team (if desired)
+        - Updating the team data
         - Deleting teams
      2.Player Management:
          - View the national teams of players in which they play
-         - View player characteristics by index
+         - View player characteristics by id
          - Updating player data
          - Creating your “Ideal” players and adding them to the team
          - Deleting players
@@ -22,8 +22,8 @@ Key Features:
 
   - Programming in Golang,
   - Gorilla Mux,
-  - Library for working with the PostgreSQL database: gorm/sql;
-  - Used the driver gorm/mySQL
+  - Library for working with the PostgreSQL database: GORM;
+  - Used the driver "github.com/jinzhu/gorm"
   
   
 ### Team members:
@@ -35,31 +35,30 @@ Key Features:
 ## API endpoints:
 
 ```
-POST /team/create : Crete a new team
-GET  /team/{id} : Taking information about team by using id
-PUT  /team/update/{id} : Update information about team by using id
-DELETE /team/delete/{id} : Delete team and memebers by using id
+POST /VolleyballAPI/team/create : Crete a new team
+GET  /VolleyballAPI/team/{id} : Taking information about team by using id
+GET  /VolleyballAPI/teams : Taking information about all existing teams in database
+PUT  /VolleyballAPI/team/update/{id} : Update information about team by using id
+DELETE /VolleyballAPI/team/delete/{id} : Delete team from database by using id
 
-POST /player/create : Crete a new player
-GET  /player/{id} : Taking information about player by using id
-PUT  /player/update/{id} : Update information about player by using id
-DELETE /player/delete/{id} : Delete player from team by using id
+POST /VolleyballAPI/player/create : Crete a new player
+GET  /VolleyballAPI/player/{id} : Taking information about player by using id
+GET  /VolleyballAPI/players : Taking information about all existing players in database
+PUT  /VolleyballAPI/player/update/{id} : Update information about player by using id
+DELETE /VolleyballAPI/player/delete/{id} : Delete player from database by using id
 
 ```
 ## DB sructure:
 ```
-package pkg 
-import "github.com/jinzhu/gorm"
-
   type Player struct { 
 	gorm.Model 
-  FirstName   string
+  	FirstName   string
 	SecondName  string 
 	TeamID      int  
 	DateOfBirth string 
 	Age         int 
 	SpikeHeight int 
-  BlockHeight int 
+  	BlockHeight int 
 	Height      int  
 }
 
