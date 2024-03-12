@@ -7,18 +7,14 @@ import (
 	"net/http"
 )
 
-func GetTeams(w http.ResponseWriter, r *http.Request) {
-	//json
+func GetPlayers(w http.ResponseWriter, r *http.Request) {
+	//json response and status
 	w.Header().Set("Content-Type", "application/json")
-
-	//status of request
 	w.WriteHeader(http.StatusOK)
 
-	//adding changes to database
-	var teams []essences.Team
+	//getting all players from database
+	var players []essences.Player
+	database.Db.Find(&players)
 
-	database.Db.Find(&teams)
-
-	//writing response
-	json.NewEncoder(w).Encode(&teams)
+	json.NewEncoder(w).Encode(&players)
 }

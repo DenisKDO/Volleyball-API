@@ -10,23 +10,23 @@ import (
 	"net/http"
 )
 
-func UpdateTeam(w http.ResponseWriter, r *http.Request) {
+func GetPlayer(w http.ResponseWriter, r *http.Request) {
+	//json response
 	w.Header().Set("Content-Type", "application/json")
 
+	//parameter from url
 	params := mux.Vars(r)
 
-	var team essences.Team
+	var player essences.Player
 
-	//finding team that we want to update else error 404
-	result := database.Db.First(&team, params["id"])
+	//finding player by id else error 404
+	result := database.Db.First(&player, params["id"])
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		http.Error(w, "Team not found", http.StatusNotFound)
+		http.Error(w, "Player not found", http.StatusNotFound)
 		return
 	}
 
-	//update already existing team
+	//write response to client in json
 	w.WriteHeader(http.StatusOK)
-	json.NewDecoder(r.Body).Decode(&team)
-	database.Db.Save(team)
-	json.NewEncoder(w).Encode(&team)
+	json.NewEncoder(w).Encode(&player)
 }
