@@ -13,13 +13,15 @@ import (
 func DeleteTeam(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
-	//
+
 	var team essences.Team
 
 	result := database.Db.First(&team, params["id"])
+	//error if id not existing
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		http.Error(w, "Team not found", http.StatusNotFound)
 	} else {
+		//delete and show response (deleted team)
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		database.Db.Delete(&team)

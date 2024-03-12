@@ -22,7 +22,7 @@ func main() {
 	router.HandleFunc("/team/update/{id}", methods.UpdateTeam).Methods("PUT")
 
 	//players methods
-	//router.HandleFunc("/players", methods.GetPlayers).Methods("GET")
+	router.HandleFunc("/players", methods.GetPlayers).Methods("GET")
 
 	//start api
 	http.ListenAndServe(":8080", router)
