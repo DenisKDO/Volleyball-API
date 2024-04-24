@@ -16,9 +16,13 @@ func GetTeams(w http.ResponseWriter, r *http.Request) {
 
 	//adding changes to database
 	var teams []essences.Team
-
+	var players []essences.Player
 	database.Db.Find(&teams)
+	for index := range teams {
 
+		database.Db.Model(&teams[index]).Related(&players)
+		teams[index].Players = players
+	}
 	//writing response
 	json.NewEncoder(w).Encode(&teams)
 }
