@@ -24,3 +24,14 @@ func RussiaNationalVolleyballTeam() *essences.Team {
 	RussiaNationalTeam.FIVBRanking = -1
 	return &RussiaNationalTeam
 }
+
+func BrazilNationalVolleyballTeam() *essences.Team {
+	var BrazilNationalTeam essences.Team
+
+	BrazilNationalTeam.Title = "Brazil men's national volleyball team"
+	BrazilNationalTeam.Nickname = "Canarinhos Galactic Best of All Times"
+	BrazilNationalTeam.Association = "CBV"
+	BrazilNationalTeam.Coach = "Bernardo Rezende"
+	BrazilNationalTeam.FIVBRanking = 5
+	return &BrazilNationalTeam
+}
