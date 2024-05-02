@@ -3,11 +3,12 @@ package methods
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/DenisKDO/Vollyball-API/internal/database"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/DenisKDO/Vollyball-API/internal/database"
+	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 )
 
 func GetPlayers(w http.ResponseWriter, r *http.Request) {
@@ -32,6 +33,15 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 	page, err := strconv.Atoi(pageStr)
 	if err != nil || page < 1 {
 		page = 1
+	}
+
+	//error if page value invalid
+	if pageStr != "" {
+		_, erro := strconv.Atoi(pageStr)
+		if erro != nil {
+			http.Error(w, "Invalid page value", http.StatusBadRequest)
+			return
+		}
 	}
 	pageSize, err := strconv.Atoi(pageSizeStr)
 	if err != nil || pageSize < 1 {
@@ -115,34 +125,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		db = db.Offset(offset).Limit(pageSize).Find(&players)
 	}
 
-	if len(query) == 0 {
-		info.Count = 55
-	}
-	info.Pages = roundUp(float64(info.Count) / float64(pageSize))
-
-	currentURL := r.URL.String()
-	nextPage := page + 1
-	prevPage := page - 1
-	if nextPage > info.Pages {
-		info.Next = "Last Page"
-	}
-	if pageStr == "" {
-		info.Prev = "First Page"
-		if len(query) == 0 {
-			info.Next = currentURL + "?page=2"
-		} else {
-			info.Next = currentURL + "&page=2"
-		}
-	}
-	if pageStr == "1" {
-		info.Prev = "First Page"
-	}
-	if strings.Contains(currentURL, "page=") && info.Next == "" {
-		info.Next = strings.Replace(currentURL, "page="+strconv.Itoa(page), "page="+strconv.Itoa(nextPage), -1)
-	}
-	if strings.Contains(currentURL, "page=") && info.Prev == "" {
-		info.Prev = strings.Replace(currentURL, "page="+strconv.Itoa(page), "page="+strconv.Itoa(prevPage), -1)
-	}
+	info = InfoStructForPagination(r, pageStr, page, pageSize, info.Count)
 
 	// Return JSON of players
 	w.WriteHeader(http.StatusOK)
