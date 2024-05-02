@@ -8,6 +8,9 @@ import (
 	"strings"
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
+	"github.com/DenisKDO/Vollyball-API/internal/filters"
+	"github.com/DenisKDO/Vollyball-API/internal/helper"
+	"github.com/DenisKDO/Vollyball-API/internal/pagination"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 )
 
@@ -57,7 +60,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		// Filtration by height
 		if heightStr != "" {
 			var err bool
-			err, db = filtersByInt(heightStr, w, db, "height")
+			err, db = filters.FiltersByInt(heightStr, w, db, "height")
 			if err != true {
 				return
 			}
@@ -66,7 +69,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		// Filtration by weight
 		if weightStr != "" {
 			var err bool
-			err, db = filtersByInt(weightStr, w, db, "weight")
+			err, db = filters.FiltersByInt(weightStr, w, db, "weight")
 			if err != true {
 				return
 			}
@@ -75,7 +78,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		//Filtration by spikeHeight
 		if spikeHeightStr != "" {
 			var err bool
-			err, db = filtersByInt(spikeHeightStr, w, db, "spike_height")
+			err, db = filters.FiltersByInt(spikeHeightStr, w, db, "spike_height")
 			if err != true {
 				return
 			}
@@ -84,7 +87,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		//Filtration by blockHeight
 		if blockHeightStr != "" {
 			var err bool
-			err, db = filtersByInt(blockHeightStr, w, db, "block_height")
+			err, db = filters.FiltersByInt(blockHeightStr, w, db, "block_height")
 			if err != true {
 				return
 			}
@@ -94,7 +97,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		if position != "" {
 			db = db.Where("position = ?", position)
 			//checking if it has any players in db with certain position
-			if NoRecordsFind(db, w, "position") == 0 {
+			if helper.NoRecordsFind(db, w, "position") == 0 {
 				return
 			}
 		}
@@ -125,7 +128,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		db = db.Offset(offset).Limit(pageSize).Find(&players)
 	}
 
-	info = InfoStructForPagination(r, pageStr, page, pageSize, info.Count)
+	info = pagination.InfoStructForPagination(r, pageStr, page, pageSize, info.Count)
 
 	// Return JSON of players
 	w.WriteHeader(http.StatusOK)

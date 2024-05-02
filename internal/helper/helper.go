@@ -1,11 +1,12 @@
-package methods
+package helper
 
 import (
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
-	"github.com/jinzhu/gorm"
 	"math"
 	"net/http"
 	"strconv"
+
+	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/jinzhu/gorm"
 )
 
 func StrToInt(queryStr string, w http.ResponseWriter, parameter string) int {
@@ -28,6 +29,6 @@ func NoRecordsFind(db *gorm.DB, w http.ResponseWriter, parameter string) int {
 	return 1
 }
 
-func roundUp(x float64) int {
+func RoundUp(x float64) int {
 	return int(math.Ceil(x))
 }

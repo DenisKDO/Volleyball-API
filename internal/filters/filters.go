@@ -1,12 +1,14 @@
-package methods
+package filters
 
 import (
-	"github.com/jinzhu/gorm"
 	"net/http"
 	"strings"
+
+	"github.com/DenisKDO/Vollyball-API/internal/helper"
+	"github.com/jinzhu/gorm"
 )
 
-func filtersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter string) (bool, *gorm.DB) {
+func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter string) (bool, *gorm.DB) {
 	if strings.Contains(queryStr, ">") || strings.Contains(queryStr, "<") {
 		//value that will contain > or <
 		tempComparison := ""
@@ -22,7 +24,7 @@ func filtersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		queryStr = queryStr[1:]
 
 		//converting str into int
-		queryInt := StrToInt(queryStr, w, parameter)
+		queryInt := helper.StrToInt(queryStr, w, parameter)
 		if queryInt == 0 {
 			return false, db
 		}
@@ -36,12 +38,12 @@ func filtersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		}
 
 		//error if no records find
-		if NoRecordsFind(db, w, parameter) == 0 {
+		if helper.NoRecordsFind(db, w, parameter) == 0 {
 			return false, db
 		}
 	} else {
 		//if = to some queryParameter
-		queryInt := StrToInt(queryStr, w, parameter)
+		queryInt := helper.StrToInt(queryStr, w, parameter)
 		if queryInt == 0 {
 			return false, db
 		}
@@ -50,7 +52,7 @@ func filtersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		db = db.Where(parameter+"= ?", queryInt)
 
 		//error if no records find
-		if NoRecordsFind(db, w, parameter) == 0 {
+		if helper.NoRecordsFind(db, w, parameter) == 0 {
 			return false, db
 		}
 	}

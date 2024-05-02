@@ -1,10 +1,11 @@
-package methods
+package pagination
 
 import (
 	"net/http"
 	"strconv"
 	"strings"
 
+	"github.com/DenisKDO/Vollyball-API/internal/helper"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 )
 
@@ -19,7 +20,7 @@ func InfoStructForPagination(r *http.Request, pageStr string, page int, pageSize
 	}
 
 	//taking pages
-	info.Pages = roundUp(float64(info.Count) / float64(pageSize))
+	info.Pages = helper.RoundUp(float64(info.Count) / float64(pageSize))
 
 	//current url string, next and prev pages
 	currentURL := r.URL.String()
