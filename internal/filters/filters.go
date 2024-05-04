@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/DenisKDO/Vollyball-API/internal/helper"
+	"github.com/DenisKDO/Vollyball-API/internal/validation"
 	"github.com/jinzhu/gorm"
 )
 
@@ -24,7 +25,7 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		queryStr = queryStr[1:]
 
 		//converting str into int
-		queryInt := helper.StrToInt(queryStr, w, parameter)
+		queryInt := validation.StrToInt(queryStr, w, parameter)
 		if queryInt == 0 {
 			return false, db
 		}
@@ -43,7 +44,7 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		}
 	} else {
 		//if = to some queryParameter
-		queryInt := helper.StrToInt(queryStr, w, parameter)
+		queryInt := validation.StrToInt(queryStr, w, parameter)
 		if queryInt == 0 {
 			return false, db
 		}

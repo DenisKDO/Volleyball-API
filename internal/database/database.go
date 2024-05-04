@@ -2,12 +2,13 @@ package database
 
 import (
 	"fmt"
+	"log"
+	"os"
+
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
-	"log"
-	"os"
 )
 
 var err error
@@ -40,6 +41,7 @@ func Database() {
 	//migrations to the database
 	Db.AutoMigrate(&essences.Player{})
 	Db.AutoMigrate(&essences.Team{})
+	Db.AutoMigrate(&essences.User{})
 
 	//Once created Teams in database from PreparingTeamsAndPlayers pkg
 	//Db.Create(PreparingTeamsAndPlayers.JapanNationalVolleyballTeam())

@@ -1,10 +1,11 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/pkg/methods"
 	"github.com/gorilla/mux"
-	"net/http"
 )
 
 func main() {
@@ -27,6 +28,10 @@ func main() {
 	router.HandleFunc("/VolleyballAPI/player/create", methods.CreatePlayer).Methods("POST")
 	router.HandleFunc("/VolleyballAPI/player/delete/{id}", methods.DeletePlayer).Methods("DELETE")
 	router.HandleFunc("/VolleyballAPI/player/update/{id}", methods.UpdatePlayer).Methods("PUT")
+
+	//users methods
+	router.HandleFunc("/VolleyballAPI/user/get", methods.GetUserInfo).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/user/reg", methods.RegisterUser).Methods("POST")
 
 	//start api
 	http.ListenAndServe(":8080", router)

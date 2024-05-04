@@ -11,6 +11,7 @@ import (
 	"github.com/DenisKDO/Vollyball-API/internal/filters"
 	"github.com/DenisKDO/Vollyball-API/internal/helper"
 	"github.com/DenisKDO/Vollyball-API/internal/pagination"
+	"github.com/DenisKDO/Vollyball-API/internal/validation"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 )
 
@@ -32,6 +33,14 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 	pageStr := query.Get("page")
 	pageSizeStr := query.Get("page_size")
 
+	//Invalid query parameter
+	v := validation.New()
+	for i, _ := range query {
+		if !validation.In(i, "height", "weight", "spike", "block", "position", "sort_by", "page", "page_size") {
+			v.AddError("ValidQueryParameter", "Invalid query parameter")
+		}
+	}
+
 	//parse page and page size parameters
 	page, err := strconv.Atoi(pageStr)
 	if err != nil || page < 1 {
@@ -42,13 +51,22 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 	if pageStr != "" {
 		_, erro := strconv.Atoi(pageStr)
 		if erro != nil {
-			http.Error(w, "Invalid page value", http.StatusBadRequest)
-			return
+			w.WriteHeader(http.StatusBadRequest)
+			v.AddError("PageValue", "Invalid page value")
 		}
 	}
 	pageSize, err := strconv.Atoi(pageSizeStr)
 	if err != nil || pageSize < 1 {
 		pageSize = 10 // Default page size
+	}
+
+	//error if page size value invalid
+	if pageSizeStr != "" {
+		_, erro := strconv.Atoi(pageSizeStr)
+		if erro != nil {
+			w.WriteHeader(http.StatusBadRequest)
+			v.AddError("PageSize", "Invalid page size value")
+		}
 	}
 
 	//offset
@@ -62,7 +80,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 			var err bool
 			err, db = filters.FiltersByInt(heightStr, w, db, "height")
 			if err != true {
-				return
+				v.AddError("HeightRecords", "Records not found")
 			}
 		}
 
@@ -71,7 +89,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 			var err bool
 			err, db = filters.FiltersByInt(weightStr, w, db, "weight")
 			if err != true {
-				return
+				v.AddError("WeightRecords", "Records not found")
 			}
 		}
 
@@ -80,7 +98,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 			var err bool
 			err, db = filters.FiltersByInt(spikeHeightStr, w, db, "spike_height")
 			if err != true {
-				return
+				v.AddError("SpikeHeightRecords", "Records not found")
 			}
 		}
 
@@ -89,7 +107,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 			var err bool
 			err, db = filters.FiltersByInt(blockHeightStr, w, db, "block_height")
 			if err != true {
-				return
+				v.AddError("BlockHeightRecords", "Records not found")
 			}
 		}
 
@@ -98,7 +116,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 			db = db.Where("position = ?", position)
 			//checking if it has any players in db with certain position
 			if helper.NoRecordsFind(db, w, "position") == 0 {
-				return
+				v.AddError("PosRecords", "Records not found")
 			}
 		}
 
@@ -115,6 +133,13 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		db.Model(essences.Player{}).Count(&info.Count)
 		// Pagination
 		db = db.Offset(offset).Limit(pageSize)
+
+		if !v.Valid() {
+			for key, message := range v.Errors {
+				fmt.Fprintf(w, "-%s: %s\n", key, message)
+			}
+			return
+		}
 
 		// Request to DB
 		db.Find(&players)
