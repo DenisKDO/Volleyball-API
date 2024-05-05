@@ -1,13 +1,16 @@
 package essences
 
-import "github.com/jinzhu/gorm"
+import (
+	"github.com/go-playground/validator/v10"
+	"github.com/jinzhu/gorm"
+)
 
 type Player struct {
 	gorm.Model
 
-	UniformNumber int    `json:"uniformNumber"`
-	FirstName     string `json:"firstName"`
-	SecondName    string `json:"secondName"`
+	UniformNumber int    `json:"uniformNumber" gorm:"not null" validate:"required,max=3"`
+	FirstName     string `json:"firstName" gorm:"not null" validate:"required"`
+	SecondName    string `json:"secondName" gorm:"not null" validate:"required"`
 	Position      string `json:"position"`
 	DateOfBirth   string `json:"dateOfBirth"`
 	Age           int    `json:"age"`
@@ -17,4 +20,9 @@ type Player struct {
 	BlockHeight   int    `json:"blockHeight"`
 	TeamID        int    `json:"teamID"`
 	TeamTitle     string `json:"teamName"`
+}
+
+func (p *Player) Validate() error {
+	validate := validator.New()
+	return validate.Struct(p)
 }

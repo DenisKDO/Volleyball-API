@@ -2,28 +2,47 @@ package methods
 
 import (
 	"encoding/json"
-	"github.com/DenisKDO/Vollyball-API/internal/database"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"fmt"
 	"net/http"
+
+	"github.com/DenisKDO/Vollyball-API/internal/validation"
+	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/go-playground/validator/v10"
 )
 
 func CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	//json
 	w.Header().Set("Content-Type", "application/json")
-	//status 200
-	w.WriteHeader(http.StatusOK)
 
 	var player essences.Player
 
 	//Take json of player from client
 	json.NewDecoder(r.Body).Decode(&player)
-	//Create player to database
-	createdPlayer := database.Db.Create(&player)
-	err := createdPlayer.Error
+
+	//validation
+	v := validation.New()
+
+	err := player.Validate()
 	if err != nil {
-		json.NewEncoder(w).Encode(err)
-	} else {
-		//show response of the created team
-		json.NewEncoder(w).Encode(&player)
+		for _, err := range err.(validator.ValidationErrors) {
+			switch err.Tag() {
+			case "required":
+				v.AddError("Validation error for field "+err.Field(), "This field is requierd")
+			case "max":
+				v.AddError("Validation error for field "+err.Field(), err.Field()+" must be max size - 2 bytes long")
+			default:
+				v.AddError("Unknown", "unknown validation error")
+			}
+		}
 	}
+
+	if !v.Valid() {
+		for key, message := range v.Errors {
+			fmt.Fprintf(w, "-%s: %s\n", key, message)
+		}
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&player)
 }
