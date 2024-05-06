@@ -42,18 +42,19 @@ func Database() {
 	Db.AutoMigrate(&essences.Player{})
 	Db.AutoMigrate(&essences.Team{})
 	Db.AutoMigrate(&essences.User{})
+	Db.AutoMigrate(&essences.Token{})
 
 	//Once created Teams in database from PreparingTeamsAndPlayers pkg
-	//Db.Create(PreparingTeamsAndPlayers.JapanNationalVolleyballTeam())
-	//Db.Create(PreparingTeamsAndPlayers.RussiaNationalVolleyballTeam())
-	//Db.Create(PreparingTeamsAndPlayers.BrazilNationalVolleyballTeam())
-	//for idx := range PreparingTeamsAndPlayers.JapanPlayers() {
-	//	Db.Create(&PreparingTeamsAndPlayers.JapanPlayers()[idx])
-	//}
-	//for idx := range PreparingTeamsAndPlayers.RussiaPlayers() {
-	//	Db.Create(&PreparingTeamsAndPlayers.RussiaPlayers()[idx])
-	//}
-	//for idx := range PreparingTeamsAndPlayers.BrazilPlayers() {
-	//	Db.Create(&PreparingTeamsAndPlayers.BrazilPlayers()[idx])
-	//}
+	// Db.Create(PreparingTeamsAndPlayers.JapanNationalVolleyballTeam())
+	// Db.Create(PreparingTeamsAndPlayers.RussiaNationalVolleyballTeam())
+	// Db.Create(PreparingTeamsAndPlayers.BrazilNationalVolleyballTeam())
+	// for idx := range PreparingTeamsAndPlayers.JapanPlayers() {
+	// 	Db.Create(&PreparingTeamsAndPlayers.JapanPlayers()[idx])
+	// }
+	// for idx := range PreparingTeamsAndPlayers.RussiaPlayers() {
+	// 	Db.Create(&PreparingTeamsAndPlayers.RussiaPlayers()[idx])
+	// }
+	// for idx := range PreparingTeamsAndPlayers.BrazilPlayers() {
+	// 	Db.Create(&PreparingTeamsAndPlayers.BrazilPlayers()[idx])
+	// }
 }

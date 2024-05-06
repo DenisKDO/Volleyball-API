@@ -3,11 +3,12 @@ package methods
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+
 	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"net/http"
 )
 
 func GetPlayer(w http.ResponseWriter, r *http.Request) {

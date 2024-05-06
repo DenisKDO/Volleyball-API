@@ -1,8 +1,14 @@
-{{define "subject"}}Welcome to Greenlight!{{end}}
+{{define "subject"}}Welcome to VolleyballAPI!{{end}}
 {{define "plainBody"}}
-Hi,
+Hi, {{.Name}},
 Thanks for signing up for a VolleyballAPI account. We're excited to have you on board!
 For future reference, your user ID number is {{.ID}}.
+To activate your VolleyballAPI account please visit http://localhost:8080/VolleyballAPI/user/activate and
+enter the following code:
+--------------------------
+{{.Token}}
+--------------------------
+Please note that this code will expire in 3 days and can only be used once.
 Thanks,
 The VolleyballAPI
 {{end}}
@@ -14,9 +20,14 @@ The VolleyballAPI
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
-<p>Hi,</p>
+<p>Hi, {{.Name}},</p>
 <p>Thanks for signing up for a VolleyballAPI account. We're excited to have you on board!</p>
 <p>For future reference, your user ID number is {{.ID}}.</p>
+<p>To activate your VolleyballAPI account please visit <a href="http://localhost:8080/VolleyballAPI/user/activate">http://localhost:8080/VolleyballAPI/user/activate</a> and enter the following code:</p>
+<p>--------------------------</p>
+<p>{{.Token}}</p>
+<p>--------------------------</p>
+<p>Please note that this code will expire in 3 days and can only be used once.</p>
 <p>Thanks,</p>
 <p>The VolleyballAPI Team</p>
 </body>

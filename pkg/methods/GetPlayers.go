@@ -9,7 +9,6 @@ import (
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/internal/filters"
-	"github.com/DenisKDO/Vollyball-API/internal/helper"
 	"github.com/DenisKDO/Vollyball-API/internal/pagination"
 	"github.com/DenisKDO/Vollyball-API/internal/validation"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
@@ -37,6 +36,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 	v := validation.New()
 	for i, _ := range query {
 		if !validation.In(i, "height", "weight", "spike", "block", "position", "sort_by", "page", "page_size") {
+			w.WriteHeader(http.StatusBadRequest)
 			v.AddError("ValidQueryParameter", "Invalid query parameter")
 		}
 	}
@@ -78,8 +78,9 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		// Filtration by height
 		if heightStr != "" {
 			var err bool
-			err, db = filters.FiltersByInt(heightStr, w, db, "height")
-			if err != true {
+			err, db = filters.FiltersByInt(heightStr, w, db, "height", v)
+			if !err {
+				w.WriteHeader(http.StatusNotFound)
 				v.AddError("HeightRecords", "Records not found")
 			}
 		}
@@ -87,8 +88,9 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		// Filtration by weight
 		if weightStr != "" {
 			var err bool
-			err, db = filters.FiltersByInt(weightStr, w, db, "weight")
-			if err != true {
+			err, db = filters.FiltersByInt(weightStr, w, db, "weight", v)
+			if !err {
+				w.WriteHeader(http.StatusNotFound)
 				v.AddError("WeightRecords", "Records not found")
 			}
 		}
@@ -96,8 +98,9 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		//Filtration by spikeHeight
 		if spikeHeightStr != "" {
 			var err bool
-			err, db = filters.FiltersByInt(spikeHeightStr, w, db, "spike_height")
-			if err != true {
+			err, db = filters.FiltersByInt(spikeHeightStr, w, db, "spike_height", v)
+			if !err {
+				w.WriteHeader(http.StatusNotFound)
 				v.AddError("SpikeHeightRecords", "Records not found")
 			}
 		}
@@ -105,18 +108,20 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		//Filtration by blockHeight
 		if blockHeightStr != "" {
 			var err bool
-			err, db = filters.FiltersByInt(blockHeightStr, w, db, "block_height")
-			if err != true {
+			err, db = filters.FiltersByInt(blockHeightStr, w, db, "block_height", v)
+			if !err {
+				w.WriteHeader(http.StatusNotFound)
 				v.AddError("BlockHeightRecords", "Records not found")
 			}
 		}
 
 		// Filtration by position
 		if position != "" {
-			db = db.Where("position = ?", position)
-			//checking if it has any players in db with certain position
-			if helper.NoRecordsFind(db, w, "position") == 0 {
-				v.AddError("PosRecords", "Records not found")
+			if !validation.In(position, "S", "L", "OH", "OP", "MB") {
+				w.WriteHeader(http.StatusBadRequest)
+				v.AddError("Position", "Invalid position value")
+			} else {
+				db = db.Where("position = ?", position)
 			}
 		}
 
@@ -146,7 +151,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 
 		// Checking if in db any players
 		if len(players) == 0 {
-			http.Error(w, "Players not found", http.StatusNotFound)
+			http.Error(w, "-Players: Records not found", http.StatusNotFound)
 			return
 		}
 	} else {

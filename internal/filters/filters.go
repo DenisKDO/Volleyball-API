@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter string) (bool, *gorm.DB) {
+func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter string, v *validation.Validator) (bool, *gorm.DB) {
 	if strings.Contains(queryStr, ">") || strings.Contains(queryStr, "<") {
 		//value that will contain > or <
 		tempComparison := ""
@@ -25,7 +25,7 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		queryStr = queryStr[1:]
 
 		//converting str into int
-		queryInt := validation.StrToInt(queryStr, w, parameter)
+		queryInt := validation.StrToInt(queryStr, w, parameter, v)
 		if queryInt == 0 {
 			return false, db
 		}
@@ -44,7 +44,7 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		}
 	} else {
 		//if = to some queryParameter
-		queryInt := validation.StrToInt(queryStr, w, parameter)
+		queryInt := validation.StrToInt(queryStr, w, parameter, v)
 		if queryInt == 0 {
 			return false, db
 		}
