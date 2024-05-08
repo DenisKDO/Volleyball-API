@@ -2,9 +2,10 @@ package methods
 
 import (
 	"encoding/json"
+	"net/http"
+
 	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
-	"net/http"
 )
 
 func GetTeams(w http.ResponseWriter, r *http.Request) {

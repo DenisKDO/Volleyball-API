@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"strconv"
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
@@ -20,8 +21,14 @@ func GetPlayer(w http.ResponseWriter, r *http.Request) {
 
 	var player essences.Player
 
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		http.Error(w, "Invalid ID value", http.StatusBadRequest)
+		return
+	}
+
 	//finding player by id else error 404
-	result := database.Db.First(&player, params["id"])
+	result := database.Db.First(&player, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		http.Error(w, "Player not found", http.StatusNotFound)
 		return

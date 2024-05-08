@@ -166,7 +166,7 @@ func BrazilPlayers() []essences.Player {
 	player.UniformNumber = 23
 	player.Position = "MB"
 	player.FirstName = "Gualberto"
-	player.SecondName = "Flávio"
+	player.SecondName = "Flavio"
 	player.Height = 199
 	player.Weight = 84
 	player.SpikeHeight = 356

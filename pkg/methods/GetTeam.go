@@ -3,11 +3,13 @@ package methods
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+	"strconv"
+
 	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"net/http"
 )
 
 func GetTeam(w http.ResponseWriter, r *http.Request) {
@@ -18,8 +20,14 @@ func GetTeam(w http.ResponseWriter, r *http.Request) {
 	var team essences.Team
 	var players []essences.Player
 
+	id, err := strconv.Atoi(params["id"])
+	if err != nil {
+		http.Error(w, "Invalid ID value", http.StatusBadRequest)
+		return
+	}
+
 	//check if team with id in url exist
-	database.Db.First(&team, params["id"])
+	database.Db.First(&team, id)
 	if errors.Is(database.Db.First(&team, params["id"]).Error, gorm.ErrRecordNotFound) {
 		http.Error(w, "Team not found", http.StatusNotFound)
 		return

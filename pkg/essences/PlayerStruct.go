@@ -8,17 +8,17 @@ import (
 type Player struct {
 	gorm.Model
 
-	UniformNumber int    `json:"uniformNumber" gorm:"not null" validate:"required,max=3"`
+	UniformNumber int    `json:"uniformNumber" gorm:"not null" validate:"required,numeric"`
 	FirstName     string `json:"firstName" gorm:"not null" validate:"required"`
 	SecondName    string `json:"secondName" gorm:"not null" validate:"required"`
 	Position      string `json:"position"`
 	DateOfBirth   string `json:"dateOfBirth"`
-	Age           int    `json:"age"`
-	Height        int    `json:"height"`
-	Weight        int    `json:"weight"`
-	SpikeHeight   int    `json:"spikeHeight"`
-	BlockHeight   int    `json:"blockHeight"`
-	TeamID        int    `json:"teamID"`
+	Age           int    `json:"age" validate:"numeric"`
+	Height        int    `json:"height" validate:"numeric"`
+	Weight        int    `json:"weight" validate:"numeric"`
+	SpikeHeight   int    `json:"spikeHeight" validate:"numeric"`
+	BlockHeight   int    `json:"blockHeight" validate:"numeric"`
+	TeamID        int    `json:"teamID" validate:"numeric"`
 	TeamTitle     string `json:"teamName"`
 }
 

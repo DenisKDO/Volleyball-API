@@ -38,6 +38,9 @@ func Database() {
 		fmt.Println("Successfully connected to database")
 	}
 
+	if err := Db.Exec("SET NAMES 'UTF8'").Error; err != nil {
+		log.Fatal(err)
+	}
 	//migrations to the database
 	Db.AutoMigrate(&essences.Player{})
 	Db.AutoMigrate(&essences.Team{})

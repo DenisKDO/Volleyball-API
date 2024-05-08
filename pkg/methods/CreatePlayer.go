@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/internal/validation"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 	"github.com/go-playground/validator/v10"
@@ -17,7 +18,11 @@ func CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	var player essences.Player
 
 	//Take json of player from client
-	json.NewDecoder(r.Body).Decode(&player)
+	if err := json.NewDecoder(r.Body).Decode(&player); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Failed to decode JSON: %v ", err)
+		return
+	}
 
 	//validation
 	v := validation.New()
@@ -27,7 +32,7 @@ func CreatePlayer(w http.ResponseWriter, r *http.Request) {
 		for _, err := range err.(validator.ValidationErrors) {
 			switch err.Tag() {
 			case "required":
-				v.AddError("Validation error for field "+err.Field(), "This field is requierd")
+				v.AddError("Validation error for field "+err.Field(), "This field is requierd or invalid type of value")
 			case "max":
 				v.AddError("Validation error for field "+err.Field(), err.Field()+" must be max size - 2 bytes long")
 			default:
@@ -38,11 +43,14 @@ func CreatePlayer(w http.ResponseWriter, r *http.Request) {
 
 	if !v.Valid() {
 		for key, message := range v.Errors {
+			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprintf(w, "-%s: %s\n", key, message)
 		}
 		return
 	}
+	database.Db.Create(&player)
 
+	//if ok give response of creative players
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(&player)
 }
