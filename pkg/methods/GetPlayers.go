@@ -77,41 +77,57 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 	if len(query) > 0 {
 		// Filtration by height
 		if heightStr != "" {
-			var err bool
-			err, db = filters.FiltersByInt(heightStr, w, db, "height", v)
-			if !err {
+			var errI, errR bool
+			errI, errR, db = filters.FiltersByInt(heightStr, w, db, "height")
+			if !errR {
 				w.WriteHeader(http.StatusNotFound)
 				v.AddError("HeightRecords", "Records not found")
+			}
+			if !errI {
+				w.WriteHeader(http.StatusBadRequest)
+				v.AddError("Height", "Invalid value")
 			}
 		}
 
 		// Filtration by weight
 		if weightStr != "" {
-			var err bool
-			err, db = filters.FiltersByInt(weightStr, w, db, "weight", v)
-			if !err {
+			var errI, errR bool
+			errI, errR, db = filters.FiltersByInt(weightStr, w, db, "weight")
+			if !errR {
 				w.WriteHeader(http.StatusNotFound)
 				v.AddError("WeightRecords", "Records not found")
+			}
+			if !errI {
+				w.WriteHeader(http.StatusBadRequest)
+				v.AddError("Weight", "Invalid value")
 			}
 		}
 
 		//Filtration by spikeHeight
 		if spikeHeightStr != "" {
-			var err bool
-			err, db = filters.FiltersByInt(spikeHeightStr, w, db, "spike_height", v)
-			if !err {
+			var errI, errR bool
+			errI, errR, db = filters.FiltersByInt(spikeHeightStr, w, db, "spike_height")
+			if !errR {
 				w.WriteHeader(http.StatusNotFound)
 				v.AddError("SpikeHeightRecords", "Records not found")
+			}
+			if !errI {
+				w.WriteHeader(http.StatusBadRequest)
+				v.AddError("SpikeHeight", "Invalid value")
 			}
 		}
 
 		//Filtration by blockHeight
 		if blockHeightStr != "" {
-			var err bool
-			err, db = filters.FiltersByInt(blockHeightStr, w, db, "block_height", v)
-			if !err {
+			var errI, errR bool
+			errI, errR, db = filters.FiltersByInt(blockHeightStr, w, db, "block_height")
+			if !errR {
 				w.WriteHeader(http.StatusNotFound)
 				v.AddError("BlockHeightRecords", "Records not found")
+			}
+			if !errI {
+				w.WriteHeader(http.StatusBadRequest)
+				v.AddError("BlockHeight", "Invalid value")
 			}
 		}
 
@@ -151,7 +167,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 
 		// Checking if in db any players
 		if len(players) == 0 {
-			http.Error(w, "-Players: Records not found", http.StatusNotFound)
+			http.Error(w, "-PositionRecords: Records not found", http.StatusNotFound)
 			return
 		}
 	} else {

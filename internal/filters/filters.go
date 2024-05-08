@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter string, v *validation.Validator) (bool, *gorm.DB) {
+func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter string) (bool, bool, *gorm.DB) {
 	if strings.Contains(queryStr, ">") || strings.Contains(queryStr, "<") {
 		//value that will contain > or <
 		tempComparison := ""
@@ -25,9 +25,9 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		queryStr = queryStr[1:]
 
 		//converting str into int
-		queryInt := validation.StrToInt(queryStr, w, parameter, v)
+		queryInt := validation.StrToInt(queryStr, w, parameter)
 		if queryInt == 0 {
-			return false, db
+			return false, true, db
 		}
 
 		//switch cases to define if we want something > or < than queryInt
@@ -40,13 +40,13 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 
 		//error if no records find
 		if helper.NoRecordsFind(db, w, parameter) == 0 {
-			return false, db
+			return true, false, db
 		}
 	} else {
 		//if = to some queryParameter
-		queryInt := validation.StrToInt(queryStr, w, parameter, v)
+		queryInt := validation.StrToInt(queryStr, w, parameter)
 		if queryInt == 0 {
-			return false, db
+			return false, true, db
 		}
 
 		//finding
@@ -54,8 +54,8 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 
 		//error if no records find
 		if helper.NoRecordsFind(db, w, parameter) == 0 {
-			return false, db
+			return true, false, db
 		}
 	}
-	return true, db
+	return true, true, db
 }

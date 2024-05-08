@@ -32,7 +32,7 @@ func main() {
 	//users methods
 	router.HandleFunc("/VolleyballAPI/user/activate", methods.ActivateUser).Methods("PUT")
 	router.HandleFunc("/VolleyballAPI/user/reg", methods.RegisterUser).Methods("POST")
-	router.HandleFunc("/VolleyballAPI/user/authentication", methods.RegisterUser).Methods("POST")
+	router.HandleFunc("/VolleyballAPI/user/authentication", methods.Authentication).Methods("POST")
 
 	//start api
 	http.ListenAndServe(":8080", router)

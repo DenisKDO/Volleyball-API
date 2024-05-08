@@ -35,12 +35,16 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 			switch err.Tag() {
 			case "required":
 				v.AddError("Validation error for field "+err.Field(), "This field is requierd")
+				w.WriteHeader(http.StatusBadRequest)
 			case "email":
 				v.AddError("Validation error for field "+err.Field(), "Please enter a valid email address")
+				w.WriteHeader(http.StatusBadRequest)
 			case "min":
 				v.AddError("Validation error for field "+err.Field(), err.Field()+" must be at least 8 bytes long")
+				w.WriteHeader(http.StatusBadRequest)
 			default:
 				v.AddError("Unknown", "unknown validation error")
+				w.WriteHeader(http.StatusBadRequest)
 			}
 		}
 	}
@@ -53,6 +57,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 		for key, message := range v.Errors {
 			fmt.Fprintf(w, "-%s: %s\n", key, message)
 		}
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 

@@ -32,12 +32,10 @@ func In(value string, list ...string) bool {
 	return false
 }
 
-func StrToInt(queryStr string, w http.ResponseWriter, parameter string, v *Validator) int {
+func StrToInt(queryStr string, w http.ResponseWriter, parameter string) int {
 	queryInt, err := strconv.Atoi(queryStr)
 
 	if err != nil {
-		v.AddError(parameter, "Invalid "+parameter)
-		w.WriteHeader(http.StatusBadRequest)
 		return 0
 	}
 	return queryInt

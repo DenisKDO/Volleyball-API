@@ -38,10 +38,8 @@ func InfoStructForPagination(r *http.Request, pageStr string, page int, pageSize
 		if len(query) == 0 {
 			info.Next = currentURL + "?page=2"
 		} else {
-			if nextPage < info.Pages {
+			if nextPage <= info.Pages {
 				info.Next = currentURL + "&page=2"
-			} else {
-				info.Next = "Last Page"
 			}
 		}
 	}
