@@ -5,6 +5,8 @@ import (
 	"crypto/sha256"
 	"encoding/base32"
 	"time"
+
+	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 )
 
 // Define constants for the token scope. For now we just define the scope "activation"
@@ -18,7 +20,7 @@ const (
 // plaintext and hashed versions of the token, associated user ID, expiry time and
 // scope.
 type Token struct {
-	Plaintext string
+	Plaintext essences.TokenHash
 	Hash      []byte
 	UserID    int64
 	Expiry    time.Time
@@ -52,12 +54,12 @@ func GenerateToken(userID int64, ttl time.Duration, scope string) (*Token, error
 	// Note that by default base-32 strings may be padded at the end with the =
 	// character. We don't need this padding character for the purpose of our tokens, so
 	// we use the WithPadding(base32.NoPadding) method in the line below to omit them.
-	token.Plaintext = base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(randomBytes)
+	token.Plaintext.Ptext = base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(randomBytes)
 	// Generate a SHA-256 hash of the plaintext token string. This will be the value
 	// that we store in the `hash` field of our database table. Note that the
 	// sha256.Sum256() function returns an *array* of length 32, so to make it easier to
 	// work with we convert it to a slice using the [:] operator before storing it.
-	hash := sha256.Sum256([]byte(token.Plaintext))
+	hash := sha256.Sum256([]byte(token.Plaintext.Ptext))
 	token.Hash = hash[:]
 	return token, nil
 }

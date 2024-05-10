@@ -76,7 +76,7 @@ func Authentication(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//Check if password valid
-	if input.Password != user.Password {
+	if input.Password != *user.Password.Plaintext {
 		http.Error(w, "Invalid user email or password", http.StatusBadRequest)
 		return
 	}
@@ -89,7 +89,7 @@ func Authentication(w http.ResponseWriter, r *http.Request) {
 	}
 
 	minToken.Expieryok = token.Expiry
-	minToken.Tokenok = token.Plaintext
+	minToken.Tokenok = token.Plaintext.Ptext
 	//encode json token
 	json.NewEncoder(w).Encode(&minToken)
 }
