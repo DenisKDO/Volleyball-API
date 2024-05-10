@@ -50,7 +50,12 @@ func CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	}
 	database.Db.Create(&player)
 
+	//response
+	response := map[string]interface{}{
+		"player": player,
+	}
+
 	//if ok give response of creative players
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(&player)
+	json.NewEncoder(w).Encode(response)
 }

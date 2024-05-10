@@ -176,9 +176,12 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 
 	info = pagination.InfoStructForPagination(r, pageStr, page, pageSize, info.Count)
 
+	response := map[string]interface{}{
+		"info":   info,
+		"result": players,
+	}
+
 	// Return JSON of players
 	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(&info)
-	fmt.Fprintf(w, "result:\n")
-	json.NewEncoder(w).Encode(&players)
+	json.NewEncoder(w).Encode(response)
 }

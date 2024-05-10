@@ -15,6 +15,9 @@ func main() {
 	//api routing
 	router := mux.NewRouter()
 
+	//healthcheck
+	router.HandleFunc("/VolleyballAPI/healthcheck", methods.HealthCheck).Methods("GET")
+
 	//teams methods
 	router.HandleFunc("/VolleyballAPI/teams", methods.GetTeams).Methods("GET")
 	router.HandleFunc("/VolleyballAPI/team/{id}", methods.GetTeam).Methods("GET")
