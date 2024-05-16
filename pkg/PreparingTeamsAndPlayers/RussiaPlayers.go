@@ -1,12 +1,13 @@
 package PreparingTeamsAndPlayers
 
+import "github.com/DenisKDO/Vollyball-API/pkg/models"
+
 //making Russia Players
-import "github.com/DenisKDO/Vollyball-API/pkg/essences"
 
-func RussiaPlayers() []essences.Player {
-	var players []essences.Player
+func RussiaPlayers() []models.Player {
+	var players []models.Player
 
-	var player essences.Player
+	var player models.Player
 
 	player.UniformNumber = 1
 	player.Position = "OH"

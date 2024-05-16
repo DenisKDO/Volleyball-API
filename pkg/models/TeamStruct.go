@@ -9,6 +9,7 @@ type Team struct {
 	gorm.Model
 
 	Title       string   `json:"title" gorm:"unique" validate:"required"`
+	Country     string   `json:"country" validate:"required"`
 	Nickname    string   `json:"nicknames"`
 	Association string   `json:"association"`
 	Coach       []Coach  `json:"coach"`

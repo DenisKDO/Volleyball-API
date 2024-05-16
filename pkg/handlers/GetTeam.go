@@ -22,7 +22,7 @@ func GetTeam(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
-		http.Error(w, "Invalid ID value", http.StatusBadRequest)
+		http.Error(w, "-ID: Invalid value", http.StatusBadRequest)
 		return
 	}
 

@@ -1,12 +1,12 @@
 package PreparingTeamsAndPlayers
 
 //making Japan Players
-import "github.com/DenisKDO/Vollyball-API/pkg/essences"
+import "github.com/DenisKDO/Vollyball-API/pkg/models"
 
-func JapanPlayers() []essences.Player {
-	var players []essences.Player
+func JapanPlayers() []models.Player {
+	var players []models.Player
 
-	var player essences.Player
+	var player models.Player
 
 	//Japan volleyball national team
 	player.UniformNumber = 1

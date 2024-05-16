@@ -47,6 +47,10 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 			if helper.NoRecordsFindCoach(db, w, parameter) == 0 {
 				return true, false, db
 			}
+		} else if model == "team" {
+			if helper.NoRecordsFindTeam(db, w, parameter) == 0 {
+				return true, false, db
+			}
 		}
 	} else {
 		//if = to some queryParameter
@@ -65,6 +69,10 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 			}
 		} else if model == "coach" {
 			if helper.NoRecordsFindCoach(db, w, parameter) == 0 {
+				return true, false, db
+			}
+		} else if model == "team" {
+			if helper.NoRecordsFindTeam(db, w, parameter) == 0 {
 				return true, false, db
 			}
 		}

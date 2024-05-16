@@ -1,12 +1,12 @@
 package PreparingTeamsAndPlayers
 
 //making German Players
-import "github.com/DenisKDO/Vollyball-API/pkg/essences"
+import "github.com/DenisKDO/Vollyball-API/pkg/models"
 
-func GermanPlayers() []essences.Player {
-	var players []essences.Player
+func GermanPlayers() []models.Player {
+	var players []models.Player
 
-	var player essences.Player
+	var player models.Player
 
 	//German volleyball national team
 	player.UniformNumber = 1

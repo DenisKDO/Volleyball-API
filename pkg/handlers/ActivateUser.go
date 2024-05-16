@@ -119,7 +119,6 @@ func ActivateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user.Activated = true
-	fmt.Println(token)
 	database.Db.Delete(&token)
 	database.Db.Save(user)
 	json.NewEncoder(w).Encode(&user)

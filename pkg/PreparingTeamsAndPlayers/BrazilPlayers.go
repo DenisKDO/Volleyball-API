@@ -1,12 +1,12 @@
 package PreparingTeamsAndPlayers
 
 //making Brazil Players
-import "github.com/DenisKDO/Vollyball-API/pkg/essences"
+import "github.com/DenisKDO/Vollyball-API/pkg/models"
 
-func BrazilPlayers() []essences.Player {
-	var players []essences.Player
+func BrazilPlayers() []models.Player {
+	var players []models.Player
 
-	var player essences.Player
+	var player models.Player
 
 	//Brazil national volleyball team
 	player.UniformNumber = 1

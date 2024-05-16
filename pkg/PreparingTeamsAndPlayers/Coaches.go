@@ -1,9 +1,9 @@
 package PreparingTeamsAndPlayers
 
-import "github.com/DenisKDO/Vollyball-API/pkg/essences"
+import "github.com/DenisKDO/Vollyball-API/pkg/models"
 
-func RussiaCoach() *essences.Coach {
-	var coach essences.Coach
+func RussiaCoach() *models.Coach {
+	var coach models.Coach
 
 	coach.FirstName = "Konstantin"
 	coach.SecondName = "Bryanskiyly"
@@ -14,8 +14,8 @@ func RussiaCoach() *essences.Coach {
 	return &coach
 }
 
-func JapanCoach() *essences.Coach {
-	var coach essences.Coach
+func JapanCoach() *models.Coach {
+	var coach models.Coach
 
 	coach.FirstName = "Philippe"
 	coach.SecondName = "Blain"
@@ -26,8 +26,8 @@ func JapanCoach() *essences.Coach {
 	return &coach
 }
 
-func BrazilCoach() *essences.Coach {
-	var coach essences.Coach
+func BrazilCoach() *models.Coach {
+	var coach models.Coach
 
 	coach.FirstName = "Bernardo"
 	coach.SecondName = "Rezende"
@@ -38,8 +38,8 @@ func BrazilCoach() *essences.Coach {
 	return &coach
 }
 
-func GermanCoach() *essences.Coach {
-	var coach essences.Coach
+func GermanCoach() *models.Coach {
+	var coach models.Coach
 
 	coach.FirstName = "Michal"
 	coach.SecondName = "Winiarski"
@@ -50,8 +50,8 @@ func GermanCoach() *essences.Coach {
 	return &coach
 }
 
-func PolandCoach() *essences.Coach {
-	var coach essences.Coach
+func PolandCoach() *models.Coach {
+	var coach models.Coach
 
 	coach.FirstName = "Nikola"
 	coach.SecondName = "Grbic"

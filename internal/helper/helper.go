@@ -31,6 +31,15 @@ func NoRecordsFindCoach(db *gorm.DB, w http.ResponseWriter, parameter string) in
 	return 1
 }
 
+func NoRecordsFindTeam(db *gorm.DB, w http.ResponseWriter, parameter string) int {
+	var count int
+	db.Model(&models.Team{}).Count(&count)
+	if count == 0 {
+		return count
+	}
+	return 1
+}
+
 func RoundUp(x float64) int {
 	return int(math.Ceil(x))
 }
