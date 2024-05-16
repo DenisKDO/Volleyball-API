@@ -11,24 +11,24 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func UpdatePlayer(w http.ResponseWriter, r *http.Request) {
+func UpdateCoach(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	params := mux.Vars(r)
 
-	var player models.Player
+	var coach models.Coach
 
 	//error if not found player
-	result := database.Db.First(&player, params["id"])
+	result := database.Db.First(&coach, params["id"])
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		http.Error(w, "-PlayerRecords: Not found", http.StatusNotFound)
+		http.Error(w, "-CoachRecrods: Not found", http.StatusNotFound)
 		return
 	}
 
 	//update already existing player
 	w.WriteHeader(http.StatusOK)
-	json.NewDecoder(r.Body).Decode(&player)
-	database.Db.Save(player)
-	json.NewEncoder(w).Encode(&player)
+	json.NewDecoder(r.Body).Decode(&coach)
+	database.Db.Save(coach)
+	json.NewEncoder(w).Encode(&coach)
 
 }

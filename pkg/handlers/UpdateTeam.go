@@ -21,7 +21,7 @@ func UpdateTeam(w http.ResponseWriter, r *http.Request) {
 	//finding team that we want to update else error 404
 	result := database.Db.First(&team, params["id"])
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		http.Error(w, "Team not found", http.StatusNotFound)
+		http.Error(w, "-TeamRecords: Not found", http.StatusNotFound)
 		return
 	}
 

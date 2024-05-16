@@ -23,14 +23,14 @@ func GetPlayer(w http.ResponseWriter, r *http.Request) {
 
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
-		http.Error(w, "Invalid ID value", http.StatusBadRequest)
+		http.Error(w, "ID: Invalid value", http.StatusBadRequest)
 		return
 	}
 
 	//finding player by id else error 404
 	result := database.Db.First(&player, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		http.Error(w, "Player not found", http.StatusNotFound)
+		http.Error(w, "PlayerRecords: Not found", http.StatusNotFound)
 		return
 	}
 

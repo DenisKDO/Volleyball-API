@@ -22,6 +22,15 @@ func NoRecordsFind(db *gorm.DB, w http.ResponseWriter, parameter string) int {
 	return 1
 }
 
+func NoRecordsFindCoach(db *gorm.DB, w http.ResponseWriter, parameter string) int {
+	var count int
+	db.Model(&models.Coach{}).Count(&count)
+	if count == 0 {
+		return count
+	}
+	return 1
+}
+
 func RoundUp(x float64) int {
 	return int(math.Ceil(x))
 }

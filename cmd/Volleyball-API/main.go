@@ -32,6 +32,13 @@ func main() {
 	router.HandleFunc("/VolleyballAPI/player/delete/{id}", handlers.DeletePlayer).Methods("DELETE")
 	router.HandleFunc("/VolleyballAPI/player/update/{id}", handlers.UpdatePlayer).Methods("PUT")
 
+	//coach methods
+	router.HandleFunc("/VolleyballAPI/coach/{id}", handlers.GetCoach).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/coaches", handlers.GetCoaches).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/coach/create", handlers.CreateCoach).Methods("POST")
+	router.HandleFunc("/VolleyballAPI/coach/delete/{id}", handlers.DeleteCoach).Methods("DELETE")
+	router.HandleFunc("/VolleyballAPI/coach/update/{id}", handlers.UpdateCoach).Methods("PUT")
+
 	//users methods
 	router.HandleFunc("/VolleyballAPI/user/activate", handlers.ActivateUser).Methods("PUT")
 	router.HandleFunc("/VolleyballAPI/user/reg", handlers.RegisterUser).Methods("POST")

@@ -9,14 +9,14 @@ import (
 	"github.com/DenisKDO/Vollyball-API/pkg/models"
 )
 
-func InfoStructForPagination(r *http.Request, pageStr string, page int, pageSize int, count int) models.Info {
+func InfoStructForPagination(r *http.Request, pageStr string, page int, pageSize int, count int, max int) models.Info {
 	var info models.Info
 	info.Count = count
 	query := r.URL.Query()
 
 	//if no query parameters count in db equal to players in db
 	if len(query) == 0 {
-		info.Count = 83
+		info.Count = max
 	}
 
 	//taking pages

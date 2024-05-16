@@ -14,20 +14,17 @@ import (
 	"github.com/DenisKDO/Vollyball-API/pkg/models"
 )
 
-func GetPlayers(w http.ResponseWriter, r *http.Request) {
+func GetCoaches(w http.ResponseWriter, r *http.Request) {
 	// Setting header JSON
 	w.Header().Set("Content-Type", "application/json")
 
-	var players []models.Player
+	var coaches []models.Coach
 	var info models.Info
 
 	// Getting query parameters
 	query := r.URL.Query()
-	heightStr := query.Get("height")
-	weightStr := query.Get("weight")
-	spikeHeightStr := query.Get("spike")
-	blockHeightStr := query.Get("block")
 	position := query.Get("position")
+	ageStr := query.Get("age")
 	sortField := query.Get("sort_by")
 	pageStr := query.Get("page")
 	pageSizeStr := query.Get("page_size")
@@ -35,7 +32,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 	//Invalid query parameter
 	v := validation.New()
 	for i, _ := range query {
-		if !validation.In(i, "height", "weight", "spike", "block", "position", "sort_by", "page", "page_size") {
+		if !validation.In(i, "age", "position", "sort_by", "page", "page_size") {
 			w.WriteHeader(http.StatusBadRequest)
 			v.AddError("ValidQueryParameter", "Invalid query parameter")
 		}
@@ -57,7 +54,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 	}
 	pageSize, err := strconv.Atoi(pageSizeStr)
 	if err != nil || pageSize < 1 {
-		pageSize = 10 // Default page size
+		pageSize = 2 // Default page size
 	}
 
 	//error if page size value invalid
@@ -75,62 +72,6 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 	db := database.Db
 
 	if len(query) > 0 {
-		// Filtration by height
-		if heightStr != "" {
-			var errI, errR bool
-			errI, errR, db = filters.FiltersByInt(heightStr, w, db, "height", "player")
-			if !errR {
-				w.WriteHeader(http.StatusNotFound)
-				v.AddError("HeightRecords", "Records not found")
-			}
-			if !errI {
-				w.WriteHeader(http.StatusBadRequest)
-				v.AddError("Height", "Invalid value")
-			}
-		}
-
-		// Filtration by weight
-		if weightStr != "" {
-			var errI, errR bool
-			errI, errR, db = filters.FiltersByInt(weightStr, w, db, "weight", "player")
-			if !errR {
-				w.WriteHeader(http.StatusNotFound)
-				v.AddError("WeightRecords", "Records not found")
-			}
-			if !errI {
-				w.WriteHeader(http.StatusBadRequest)
-				v.AddError("Weight", "Invalid value")
-			}
-		}
-
-		//Filtration by spikeHeight
-		if spikeHeightStr != "" {
-			var errI, errR bool
-			errI, errR, db = filters.FiltersByInt(spikeHeightStr, w, db, "spike_height", "player")
-			if !errR {
-				w.WriteHeader(http.StatusNotFound)
-				v.AddError("SpikeHeightRecords", "Records not found")
-			}
-			if !errI {
-				w.WriteHeader(http.StatusBadRequest)
-				v.AddError("SpikeHeight", "Invalid value")
-			}
-		}
-
-		//Filtration by blockHeight
-		if blockHeightStr != "" {
-			var errI, errR bool
-			errI, errR, db = filters.FiltersByInt(blockHeightStr, w, db, "block_height", "player")
-			if !errR {
-				w.WriteHeader(http.StatusNotFound)
-				v.AddError("BlockHeightRecords", "Records not found")
-			}
-			if !errI {
-				w.WriteHeader(http.StatusBadRequest)
-				v.AddError("BlockHeight", "Invalid value")
-			}
-		}
-
 		// Filtration by position
 		if position != "" {
 			if !validation.In(position, "S", "L", "OH", "OP", "MB") {
@@ -138,6 +79,19 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 				v.AddError("Position", "Invalid position value")
 			} else {
 				db = db.Where("position = ?", position)
+			}
+		}
+
+		if ageStr != "" {
+			var errI, errR bool
+			errI, errR, db = filters.FiltersByInt(ageStr, w, db, "age", "coach")
+			if !errR {
+				w.WriteHeader(http.StatusNotFound)
+				v.AddError("AgeRecords", "Records not found")
+			}
+			if !errI {
+				w.WriteHeader(http.StatusBadRequest)
+				v.AddError("Age", "Invalid value")
 			}
 		}
 
@@ -151,7 +105,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 
 			}
 		}
-		db.Model(models.Player{}).Count(&info.Count)
+		db.Model(models.Coach{}).Count(&info.Count)
 		// Pagination
 		db = db.Offset(offset).Limit(pageSize)
 
@@ -163,25 +117,25 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Request to DB
-		db.Find(&players)
+		db.Find(&coaches)
 
 		// Checking if in db any players
-		if len(players) == 0 {
+		if len(coaches) == 0 {
 			http.Error(w, "-Page: Not found", http.StatusNotFound)
 			return
 		}
 	} else {
-		db = db.Offset(offset).Limit(pageSize).Find(&players)
+		db = db.Offset(offset).Limit(pageSize).Find(&coaches)
 	}
 
 	var count int
-	db.Model(&models.Player{}).Count(&count)
+	db.Model(&models.Coach{}).Count(&count)
 
 	info = pagination.InfoStructForPagination(r, pageStr, page, pageSize, info.Count, count)
 
 	response := map[string]interface{}{
 		"info":   info,
-		"result": players,
+		"result": coaches,
 	}
 
 	// Return JSON of players

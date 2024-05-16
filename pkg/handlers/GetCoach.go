@@ -12,25 +12,29 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func DeletePlayer(w http.ResponseWriter, r *http.Request) {
+func GetCoach(w http.ResponseWriter, r *http.Request) {
+	//json response
+	w.Header().Set("Content-Type", "application/json")
+
+	//parameter from url
 	params := mux.Vars(r)
 
-	var player models.Player
+	var coach models.Coach
+
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
 		http.Error(w, "-ID: Invalid value", http.StatusBadRequest)
 		return
 	}
 
-	result := database.Db.First(&player, id)
-	//error if id not existing
+	//finding player by id else error 404
+	result := database.Db.First(&coach, id)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		http.Error(w, "-PlayerRecords: Not found", http.StatusNotFound)
-	} else {
-		//delete and show response (deleted team)
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		database.Db.Delete(&player)
-		json.NewEncoder(w).Encode(&player)
+		http.Error(w, "-CoachRecord: Not found", http.StatusNotFound)
+		return
 	}
+
+	//write response to client in json
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(&coach)
 }

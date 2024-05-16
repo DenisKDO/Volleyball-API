@@ -29,7 +29,7 @@ func GetTeam(w http.ResponseWriter, r *http.Request) {
 	//check if team with id in url exist
 	database.Db.First(&team, id)
 	if errors.Is(database.Db.First(&team, params["id"]).Error, gorm.ErrRecordNotFound) {
-		http.Error(w, "Team not found", http.StatusNotFound)
+		http.Error(w, "-Team: Not found", http.StatusNotFound)
 		return
 	}
 

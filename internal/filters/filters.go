@@ -9,7 +9,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter string) (bool, bool, *gorm.DB) {
+func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter string, model string) (bool, bool, *gorm.DB) {
 	if strings.Contains(queryStr, ">") || strings.Contains(queryStr, "<") {
 		//value that will contain > or <
 		tempComparison := ""
@@ -39,8 +39,14 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		}
 
 		//error if no records find
-		if helper.NoRecordsFind(db, w, parameter) == 0 {
-			return true, false, db
+		if model == "player" {
+			if helper.NoRecordsFind(db, w, parameter) == 0 {
+				return true, false, db
+			}
+		} else if model == "coach" {
+			if helper.NoRecordsFindCoach(db, w, parameter) == 0 {
+				return true, false, db
+			}
 		}
 	} else {
 		//if = to some queryParameter
@@ -53,8 +59,14 @@ func FiltersByInt(queryStr string, w http.ResponseWriter, db *gorm.DB, parameter
 		db = db.Where(parameter+"= ?", queryInt)
 
 		//error if no records find
-		if helper.NoRecordsFind(db, w, parameter) == 0 {
-			return true, false, db
+		if model == "player" {
+			if helper.NoRecordsFind(db, w, parameter) == 0 {
+				return true, false, db
+			}
+		} else if model == "coach" {
+			if helper.NoRecordsFindCoach(db, w, parameter) == 0 {
+				return true, false, db
+			}
 		}
 	}
 	return true, true, db
