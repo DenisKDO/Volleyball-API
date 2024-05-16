@@ -1,4 +1,4 @@
-package methods
+package handlers
 
 import (
 	"encoding/json"
@@ -12,7 +12,7 @@ import (
 	"github.com/DenisKDO/Vollyball-API/internal/password"
 	"github.com/DenisKDO/Vollyball-API/internal/tokens"
 	"github.com/DenisKDO/Vollyball-API/internal/validation"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
@@ -37,7 +37,7 @@ func RegisterUser(w http.ResponseWriter, r *http.Request) {
 
 	//creating user struct
 	var user tempUser
-	var trueUser essences.User
+	var trueUser models.User
 	//Take JSON file from client
 	if err := json.NewDecoder(r.Body).Decode(&user); err != nil {
 		w.WriteHeader(http.StatusBadRequest)

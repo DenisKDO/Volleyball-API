@@ -5,7 +5,7 @@ import (
 	"math"
 	"net/http"
 
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/jinzhu/gorm"
 )
 
@@ -15,7 +15,7 @@ var (
 
 func NoRecordsFind(db *gorm.DB, w http.ResponseWriter, parameter string) int {
 	var count int
-	db.Model(&essences.Player{}).Count(&count)
+	db.Model(&models.Player{}).Count(&count)
 	if count == 0 {
 		return count
 	}

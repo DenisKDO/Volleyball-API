@@ -6,11 +6,11 @@ import (
 	"strings"
 
 	"github.com/DenisKDO/Vollyball-API/internal/helper"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 )
 
-func InfoStructForPagination(r *http.Request, pageStr string, page int, pageSize int, count int) essences.Info {
-	var info essences.Info
+func InfoStructForPagination(r *http.Request, pageStr string, page int, pageSize int, count int) models.Info {
+	var info models.Info
 	info.Count = count
 	query := r.URL.Query()
 

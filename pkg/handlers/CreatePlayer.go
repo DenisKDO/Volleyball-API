@@ -1,4 +1,4 @@
-package methods
+package handlers
 
 import (
 	"encoding/json"
@@ -7,19 +7,18 @@ import (
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/internal/validation"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/go-playground/validator/v10"
-	"github.com/jinzhu/gorm"
 )
 
-func CreateTeam(w http.ResponseWriter, r *http.Request) {
+func CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	//json
 	w.Header().Set("Content-Type", "application/json")
 
-	var team essences.Team
+	var player models.Player
 
-	//Take JSON file from client
-	if err := json.NewDecoder(r.Body).Decode(&team); err != nil {
+	//Take json of player from client
+	if err := json.NewDecoder(r.Body).Decode(&player); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "Failed to decode JSON: %v ", err)
 		return
@@ -28,12 +27,16 @@ func CreateTeam(w http.ResponseWriter, r *http.Request) {
 	//validation
 	v := validation.New()
 
-	err := team.Validate()
+	err := player.Validate()
 	if err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
 			switch err.Tag() {
 			case "required":
 				v.AddError("Validation error for field "+err.Field(), "This field is requierd or invalid type of value")
+			case "max":
+				v.AddError("Validation error for field "+err.Field(), err.Field()+" must be max size - 2 bytes long")
+			default:
+				v.AddError("Unknown", "unknown validation error")
 			}
 		}
 	}
@@ -45,24 +48,14 @@ func CreateTeam(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
+	database.Db.Create(&player)
 
-	//check for unique
-	if err := database.Db.Where("title = ?", team.Title).First(&essences.Team{}).Error; err != nil {
-		if err != gorm.ErrRecordNotFound {
-			w.WriteHeader(http.StatusInternalServerError)
-			fmt.Fprintf(w, "Failed to check uniqueness of team title: %v\n", err)
-			return
-		}
-	} else {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "Team with title '%s' already exists\n", team.Title)
-		return
+	//response
+	response := map[string]interface{}{
+		"player": player,
 	}
 
-	database.Db.Create(&team)
-
-	//status 200
+	//if ok give response of creative players
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(&team)
-
+	json.NewEncoder(w).Encode(response)
 }

@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
-	"github.com/DenisKDO/Vollyball-API/pkg/methods"
+	"github.com/DenisKDO/Vollyball-API/pkg/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -16,26 +16,26 @@ func main() {
 	router := mux.NewRouter()
 
 	//healthcheck
-	router.HandleFunc("/VolleyballAPI/healthcheck", methods.HealthCheck).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/healthcheck", handlers.HealthCheck).Methods("GET")
 
 	//teams methods
-	router.HandleFunc("/VolleyballAPI/teams", methods.GetTeams).Methods("GET")
-	router.HandleFunc("/VolleyballAPI/team/{id}", methods.GetTeam).Methods("GET")
-	router.HandleFunc("/VolleyballAPI/team/create", methods.CreateTeam).Methods("POST")
-	router.HandleFunc("/VolleyballAPI/team/delete/{id}", methods.DeleteTeam).Methods("DELETE")
-	router.HandleFunc("/VolleyballAPI/team/update/{id}", methods.UpdateTeam).Methods("PUT")
+	router.HandleFunc("/VolleyballAPI/teams", handlers.GetTeams).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/team/{id}", handlers.GetTeam).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/team/create", handlers.CreateTeam).Methods("POST")
+	router.HandleFunc("/VolleyballAPI/team/delete/{id}", handlers.DeleteTeam).Methods("DELETE")
+	router.HandleFunc("/VolleyballAPI/team/update/{id}", handlers.UpdateTeam).Methods("PUT")
 
 	//players methods
-	router.HandleFunc("/VolleyballAPI/players", methods.GetPlayers).Methods("GET")
-	router.HandleFunc("/VolleyballAPI/player/{id}", methods.GetPlayer).Methods("GET")
-	router.HandleFunc("/VolleyballAPI/player/create", methods.CreatePlayer).Methods("POST")
-	router.HandleFunc("/VolleyballAPI/player/delete/{id}", methods.DeletePlayer).Methods("DELETE")
-	router.HandleFunc("/VolleyballAPI/player/update/{id}", methods.UpdatePlayer).Methods("PUT")
+	router.HandleFunc("/VolleyballAPI/players", handlers.GetPlayers).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/player/{id}", handlers.GetPlayer).Methods("GET")
+	router.HandleFunc("/VolleyballAPI/player/create", handlers.CreatePlayer).Methods("POST")
+	router.HandleFunc("/VolleyballAPI/player/delete/{id}", handlers.DeletePlayer).Methods("DELETE")
+	router.HandleFunc("/VolleyballAPI/player/update/{id}", handlers.UpdatePlayer).Methods("PUT")
 
 	//users methods
-	router.HandleFunc("/VolleyballAPI/user/activate", methods.ActivateUser).Methods("PUT")
-	router.HandleFunc("/VolleyballAPI/user/reg", methods.RegisterUser).Methods("POST")
-	router.HandleFunc("/VolleyballAPI/user/authentication", methods.Authentication).Methods("POST")
+	router.HandleFunc("/VolleyballAPI/user/activate", handlers.ActivateUser).Methods("PUT")
+	router.HandleFunc("/VolleyballAPI/user/reg", handlers.RegisterUser).Methods("POST")
+	router.HandleFunc("/VolleyballAPI/user/authentication", handlers.Authentication).Methods("POST")
 
 	//start api
 	http.ListenAndServe(":8080", router)

@@ -6,7 +6,7 @@ import (
 	"encoding/base32"
 	"time"
 
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 )
 
 // Define constants for the token scope. For now we just define the scope "activation"
@@ -20,7 +20,7 @@ const (
 // plaintext and hashed versions of the token, associated user ID, expiry time and
 // scope.
 type Token struct {
-	Plaintext essences.TokenHash
+	Plaintext models.TokenHash
 	Hash      []byte
 	UserID    int64
 	Expiry    time.Time

@@ -1,11 +1,11 @@
-package methods
+package handlers
 
 import (
 	"encoding/json"
 	"net/http"
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 )
 
 func GetTeams(w http.ResponseWriter, r *http.Request) {
@@ -16,11 +16,12 @@ func GetTeams(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 	//adding changes to database
-	var teams []essences.Team
-	var players []essences.Player
+	var teams []models.Team
+	var players []models.Player
+	var coach []models.Coach
 	database.Db.Find(&teams)
 	for index := range teams {
-
+		database.Db.Model(&teams[index]).Related(&coach)
 		database.Db.Model(&teams[index]).Related(&players)
 		teams[index].Players = players
 	}

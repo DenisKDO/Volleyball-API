@@ -1,4 +1,4 @@
-package essences
+package models
 
 import (
 	"github.com/DenisKDO/Vollyball-API/internal/password"

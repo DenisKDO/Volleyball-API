@@ -1,4 +1,4 @@
-package essences
+package models
 
 type Info struct {
 	Count int    `json:"count"`

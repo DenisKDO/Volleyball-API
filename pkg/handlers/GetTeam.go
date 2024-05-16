@@ -1,4 +1,4 @@
-package methods
+package handlers
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 )
@@ -17,8 +17,8 @@ func GetTeam(w http.ResponseWriter, r *http.Request) {
 	//params from URL
 	params := mux.Vars(r)
 
-	var team essences.Team
-	var players []essences.Player
+	var team models.Team
+	var players []models.Player
 
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {

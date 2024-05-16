@@ -1,13 +1,14 @@
-package methods
+package handlers
 
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+
 	"github.com/DenisKDO/Vollyball-API/internal/database"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"net/http"
 )
 
 func UpdateTeam(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +16,7 @@ func UpdateTeam(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
-	var team essences.Team
+	var team models.Team
 
 	//finding team that we want to update else error 404
 	result := database.Db.First(&team, params["id"])

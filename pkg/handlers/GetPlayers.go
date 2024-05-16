@@ -1,4 +1,4 @@
-package methods
+package handlers
 
 import (
 	"encoding/json"
@@ -11,15 +11,15 @@ import (
 	"github.com/DenisKDO/Vollyball-API/internal/filters"
 	"github.com/DenisKDO/Vollyball-API/internal/pagination"
 	"github.com/DenisKDO/Vollyball-API/internal/validation"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 )
 
 func GetPlayers(w http.ResponseWriter, r *http.Request) {
 	// Setting header JSON
 	w.Header().Set("Content-Type", "application/json")
 
-	var players []essences.Player
-	var info essences.Info
+	var players []models.Player
+	var info models.Info
 
 	// Getting query parameters
 	query := r.URL.Query()
@@ -151,7 +151,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 
 			}
 		}
-		db.Model(essences.Player{}).Count(&info.Count)
+		db.Model(models.Player{}).Count(&info.Count)
 		// Pagination
 		db = db.Offset(offset).Limit(pageSize)
 

@@ -1,13 +1,14 @@
-package methods
+package handlers
 
 import (
 	"encoding/json"
 	"errors"
+	"net/http"
+
 	"github.com/DenisKDO/Vollyball-API/internal/database"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
-	"net/http"
 )
 
 func UpdatePlayer(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +16,7 @@ func UpdatePlayer(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
-	var player essences.Player
+	var player models.Player
 
 	//error if not found player
 	result := database.Db.First(&player, params["id"])

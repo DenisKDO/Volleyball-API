@@ -1,4 +1,4 @@
-package methods
+package handlers
 
 import (
 	"encoding/json"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/gorilla/mux"
 	"github.com/jinzhu/gorm"
 )
@@ -16,7 +16,7 @@ func DeleteTeam(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r)
 
-	var team essences.Team
+	var team models.Team
 	id, err := strconv.Atoi(params["id"])
 	if err != nil {
 		http.Error(w, "Invalid ID value", http.StatusBadRequest)

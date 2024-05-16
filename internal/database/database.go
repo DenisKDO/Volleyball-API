@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/joho/godotenv"
@@ -42,11 +42,11 @@ func Database() {
 		log.Fatal(err)
 	}
 	//migrations to the database
-	Db.AutoMigrate(&essences.Player{})
-	Db.AutoMigrate(&essences.Team{})
-	Db.AutoMigrate(&essences.User{})
-	Db.AutoMigrate(&essences.Token{})
-	Db.AutoMigrate(&essences.Coach{})
+	Db.AutoMigrate(&models.Player{})
+	Db.AutoMigrate(&models.Team{})
+	Db.AutoMigrate(&models.User{})
+	Db.AutoMigrate(&models.Token{})
+	Db.AutoMigrate(&models.Coach{})
 
 	//Once created Teams in database from PreparingTeamsAndPlayers pkg
 	// Db.Create(PreparingTeamsAndPlayers.JapanNationalVolleyballTeam())

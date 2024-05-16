@@ -1,4 +1,4 @@
-package methods
+package handlers
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/internal/tokens"
 	"github.com/DenisKDO/Vollyball-API/internal/validation"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/go-playground/validator/v10"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
@@ -30,7 +30,7 @@ func (i *input) Validate() error {
 func Authentication(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var input input
-	var user essences.User
+	var user models.User
 	v := validation.New()
 
 	//take json from user
@@ -91,7 +91,7 @@ func Authentication(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//if user already have not expired token
-	var tokenCheck essences.Token
+	var tokenCheck models.Token
 	if ok := database.Db.Where("user_id = ?", user.ID).First(&tokenCheck).Error; ok == nil {
 		if token.Scope == tokens.ScopeAuthentication {
 			http.Error(w, "This user already has authentication token", http.StatusConflict)

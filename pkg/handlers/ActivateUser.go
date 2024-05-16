@@ -1,4 +1,4 @@
-package methods
+package handlers
 
 import (
 	"crypto/sha256"
@@ -13,7 +13,7 @@ import (
 	"github.com/DenisKDO/Vollyball-API/internal/mailer"
 	"github.com/DenisKDO/Vollyball-API/internal/tokens"
 	"github.com/DenisKDO/Vollyball-API/internal/validation"
-	"github.com/DenisKDO/Vollyball-API/pkg/essences"
+	"github.com/DenisKDO/Vollyball-API/pkg/models"
 	"github.com/go-playground/validator/v10"
 	"github.com/jinzhu/gorm"
 )
@@ -34,8 +34,8 @@ func ActivateUser(w http.ResponseWriter, r *http.Request) {
 	v := validation.New()
 
 	var minToken MinToken
-	var token essences.Token
-	var user essences.User
+	var token models.Token
+	var user models.User
 
 	//take json from user
 	if err := json.NewDecoder(r.Body).Decode(&minToken); err != nil {

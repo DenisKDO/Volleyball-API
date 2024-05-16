@@ -1,4 +1,4 @@
-package essences
+package models
 
 import (
 	"github.com/go-playground/validator/v10"
@@ -11,7 +11,7 @@ type Team struct {
 	Title       string   `json:"title" gorm:"unique" validate:"required"`
 	Nickname    string   `json:"nicknames"`
 	Association string   `json:"association"`
-	Coach       Coach    `json:"coach"`
+	Coach       []Coach  `json:"coach"`
 	Players     []Player `json:"players"`
 	FIVBRanking int      `json:"FIVBRanking"`
 }
