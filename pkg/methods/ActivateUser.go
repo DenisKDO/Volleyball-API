@@ -9,6 +9,9 @@ import (
 	"time"
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
+	"github.com/DenisKDO/Vollyball-API/internal/helper"
+	"github.com/DenisKDO/Vollyball-API/internal/mailer"
+	"github.com/DenisKDO/Vollyball-API/internal/tokens"
 	"github.com/DenisKDO/Vollyball-API/internal/validation"
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 	"github.com/go-playground/validator/v10"
@@ -62,7 +65,7 @@ func ActivateUser(w http.ResponseWriter, r *http.Request) {
 	hash := sha256.Sum256([]byte(minToken.Token))
 	token.Hash = hash[:]
 	if err := database.Db.Where("hash = ?", token.Hash).First(&token).Error; err != nil {
-		http.Error(w, "Token has expired, has already been used, or does not exist", http.StatusNotFound)
+		http.Error(w, "Token has already been used or does not exist", http.StatusNotFound)
 		return
 	}
 
@@ -73,7 +76,45 @@ func ActivateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if time.Now().After(token.Expiry) {
-		http.Error(w, "Token is expired", http.StatusUnauthorized)
+		http.Error(w, "Token is expired, sending another user activation token", http.StatusUnauthorized)
+		database.Db.Delete(&token)
+		//generating token
+		token, err := tokens.GenerateToken(int64(user.ID), 3*time.Hour*24, tokens.ScopeActivation)
+		if err != nil {
+			http.Error(w, "Error in creating token", http.StatusInternalServerError)
+			return
+		}
+
+		createdToken := database.Db.Create(&token)
+		err = createdToken.Error
+		if err != nil {
+			http.Error(w, "Error in creating token", http.StatusInternalServerError)
+			return
+		}
+
+		//email sending
+		data := struct {
+			Name  string
+			ID    int
+			Token string
+		}{
+			Name:  user.Name,
+			ID:    int(user.ID),
+			Token: token.Plaintext.Ptext,
+		}
+
+		m := mailer.New("sandbox.smtp.mailtrap.io", 587, "5384e1ea4ca8b8", "6011b01060d126", "den.kim04@mail.ru")
+
+		//sending and checking for panic in goroutine
+		helper.Background(func() {
+			err = m.Send(user.EmailAddress, "user_welcome.tmpl", data)
+			if err != nil {
+				// Importantly, if there is an error sending the email then we use the
+				// http.Error() function to send a generic error message to the client.
+				http.Error(w, "Error in sending email", http.StatusInternalServerError)
+				return
+			}
+		})
 		return
 	}
 

@@ -62,7 +62,7 @@ func CreateTeam(w http.ResponseWriter, r *http.Request) {
 	database.Db.Create(&team)
 
 	//status 200
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(&team)
 
 }

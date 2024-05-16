@@ -11,7 +11,7 @@ type Team struct {
 	Title       string   `json:"title" gorm:"unique" validate:"required"`
 	Nickname    string   `json:"nicknames"`
 	Association string   `json:"association"`
-	Coach       string   `json:"coach"`
+	Coach       Coach    `json:"coach"`
 	Players     []Player `json:"players"`
 	FIVBRanking int      `json:"FIVBRanking"`
 }

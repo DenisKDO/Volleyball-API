@@ -56,6 +56,6 @@ func CreatePlayer(w http.ResponseWriter, r *http.Request) {
 	}
 
 	//if ok give response of creative players
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(response)
 }

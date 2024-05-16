@@ -167,7 +167,7 @@ func GetPlayers(w http.ResponseWriter, r *http.Request) {
 
 		// Checking if in db any players
 		if len(players) == 0 {
-			http.Error(w, "-PositionRecords: Records not found", http.StatusNotFound)
+			http.Error(w, "-Page: Not found", http.StatusNotFound)
 			return
 		}
 	} else {

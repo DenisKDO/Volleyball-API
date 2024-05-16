@@ -13,17 +13,13 @@ import (
 	"github.com/DenisKDO/Vollyball-API/pkg/essences"
 	"github.com/go-playground/validator/v10"
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 )
 
 // input struct
 type input struct {
 	Email    string `json:"email" validate:"required,email"`
 	Password string `json:"password" validate:"required,min=8"`
-}
-
-type minToken struct {
-	Tokenok   string    `json:"token"`
-	Expieryok time.Time `json:"expiery"`
 }
 
 func (i *input) Validate() error {
@@ -35,18 +31,17 @@ func Authentication(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var input input
 	var user essences.User
-	var minToken minToken
 	v := validation.New()
 
-	//Taking json from user
-	err := json.NewDecoder(r.Body).Decode(&input)
-	if err != nil {
-		http.Error(w, "Error in json", http.StatusBadRequest)
+	//take json from user
+	if err := json.NewDecoder(r.Body).Decode(&input); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "Failed to decode JSON: %v ", err)
+		return
 	}
 
 	//check for validation
-	err = input.Validate()
-	if err != nil {
+	if err := input.Validate(); err != nil {
 		for _, err := range err.(validator.ValidationErrors) {
 			switch err.Tag() {
 			case "required":
@@ -65,31 +60,53 @@ func Authentication(w http.ResponseWriter, r *http.Request) {
 		for key, message := range v.Errors {
 			fmt.Fprintf(w, "-%s: %s\n", key, message)
 		}
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	//check if there any user with that email
 	result := database.Db.Where("email_address = ?", input.Email).First(&user)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		http.Error(w, "Invalid user email or password", http.StatusNotFound)
+		http.Error(w, "Invalid user email or password", http.StatusUnauthorized)
 		return
 	}
 
-	//Check if password valid
-	if input.Password != *user.Password.Plaintext {
-		http.Error(w, "Invalid user email or password", http.StatusBadRequest)
+	//if not activated0
+	if !user.Activated {
+		http.Error(w, "Your profile has not activated", http.StatusForbidden)
 		return
 	}
 
-	//Creating a token for user
+	//check for password
+	if err := bcrypt.CompareHashAndPassword(user.PasswordHash, []byte(input.Password)); err != nil {
+		http.Error(w, "Invalid user email or password", http.StatusUnauthorized)
+		return
+	}
+
+	//create token for user
 	token, err := tokens.GenerateToken(int64(user.ID), 24*time.Hour, tokens.ScopeAuthentication)
 	if err != nil {
-		http.Error(w, "Server error", http.StatusInternalServerError)
+		http.Error(w, "Server error in creating authentication token", http.StatusInternalServerError)
 		return
 	}
 
-	minToken.Expieryok = token.Expiry
-	minToken.Tokenok = token.Plaintext.Ptext
-	//encode json token
-	json.NewEncoder(w).Encode(&minToken)
+	//if user already have not expired token
+	var tokenCheck essences.Token
+	if ok := database.Db.Where("user_id = ?", user.ID).First(&tokenCheck).Error; ok == nil {
+		if token.Scope == tokens.ScopeAuthentication {
+			http.Error(w, "This user already has authentication token", http.StatusConflict)
+			return
+		}
+	}
+
+	//create token
+	database.Db.Create(&token)
+
+	//json response
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"authentication_token": map[string]interface{}{
+			"token":  token.Plaintext,
+			"expiry": token.Expiry,
+		},
+	})
 }

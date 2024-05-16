@@ -9,7 +9,6 @@ func JapanNationalVolleyballTeam() *essences.Team {
 	JapanNationalTeam.Title = "Japan men's national volleyball team"
 	JapanNationalTeam.Nickname = "Ryujin Nippon"
 	JapanNationalTeam.Association = "Japan Volleyball Association"
-	JapanNationalTeam.Coach = "Philippe Blain"
 	JapanNationalTeam.FIVBRanking = 4
 	return &JapanNationalTeam
 }
@@ -20,8 +19,6 @@ func RussiaNationalVolleyballTeam() *essences.Team {
 	RussiaNationalTeam.Title = "Russia men's national volleyball team"
 	RussiaNationalTeam.Nickname = "Reds Caesar Land"
 	RussiaNationalTeam.Association = "Russian Volleyball Federation"
-	RussiaNationalTeam.Coach = "Konstantin Bryanskiy"
-	RussiaNationalTeam.FIVBRanking = -1
 	return &RussiaNationalTeam
 }
 
@@ -31,7 +28,26 @@ func BrazilNationalVolleyballTeam() *essences.Team {
 	BrazilNationalTeam.Title = "Brazil men's national volleyball team"
 	BrazilNationalTeam.Nickname = "Canarinhos Galactic Best of All Times"
 	BrazilNationalTeam.Association = "CBV"
-	BrazilNationalTeam.Coach = "Bernardo Rezende"
 	BrazilNationalTeam.FIVBRanking = 5
+	return &BrazilNationalTeam
+}
+
+func GermanNationalVolleyballTeam() *essences.Team {
+	var BrazilNationalTeam essences.Team
+
+	BrazilNationalTeam.Title = "German men's national volleyball team"
+	BrazilNationalTeam.Nickname = "Die Adler (The Eagles)"
+	BrazilNationalTeam.Association = "Deutscher Volleyball-Verband"
+	BrazilNationalTeam.FIVBRanking = 10
+	return &BrazilNationalTeam
+}
+
+func PolandNationalVolleyballTeam() *essences.Team {
+	var BrazilNationalTeam essences.Team
+
+	BrazilNationalTeam.Title = "Poland men's national volleyball team"
+	BrazilNationalTeam.Nickname = "Bialo-Czerwoni"
+	BrazilNationalTeam.Association = "Polish Volleyball Federation"
+	BrazilNationalTeam.FIVBRanking = 1
 	return &BrazilNationalTeam
 }

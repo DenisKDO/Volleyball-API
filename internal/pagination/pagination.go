@@ -16,7 +16,7 @@ func InfoStructForPagination(r *http.Request, pageStr string, page int, pageSize
 
 	//if no query parameters count in db equal to players in db
 	if len(query) == 0 {
-		info.Count = 55
+		info.Count = 83
 	}
 
 	//taking pages
@@ -28,7 +28,7 @@ func InfoStructForPagination(r *http.Request, pageStr string, page int, pageSize
 	prevPage := page - 1
 
 	//deticating last page
-	if nextPage > info.Pages {
+	if nextPage == info.Pages+1 {
 		info.Next = "Last Page"
 	}
 
