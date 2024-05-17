@@ -5,6 +5,8 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
+var AnonymousUser = &User{}
+
 type Team struct {
 	gorm.Model
 
@@ -15,6 +17,10 @@ type Team struct {
 	Coach       []Coach  `json:"coach"`
 	Players     []Player `json:"players"`
 	FIVBRanking int      `json:"FIVBRanking"`
+}
+
+func (u *User) IsAnonymous() bool {
+	return u == AnonymousUser
 }
 
 func (p *Team) Validate() error {

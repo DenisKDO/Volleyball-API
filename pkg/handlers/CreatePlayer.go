@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"crypto/sha256"
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/DenisKDO/Vollyball-API/internal/database"
 	"github.com/DenisKDO/Vollyball-API/internal/validation"
@@ -12,6 +14,24 @@ import (
 )
 
 func CreatePlayer(w http.ResponseWriter, r *http.Request) {
+	authHeader := r.Header.Get("Authorization")
+	if authHeader == "" {
+		http.Error(w, "Please enter authorizations token", http.StatusForbidden)
+		return
+	}
+	parts := strings.Split(authHeader, " ")
+	tokenOK := parts[1]
+	if parts[0] != "Bearer" || parts[1] == "" {
+		http.Error(w, "Please enter authorizations token", http.StatusForbidden)
+		return
+	}
+	hash := sha256.Sum256([]byte(tokenOK))
+	var token models.Token
+	token.Hash = hash[:]
+	if err := database.Db.Where("hash = ?", token.Hash).First(&token).Error; err != nil {
+		http.Error(w, "Invalid authorization token", http.StatusForbidden)
+		return
+	}
 	//json
 	w.Header().Set("Content-Type", "application/json")
 

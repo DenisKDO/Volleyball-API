@@ -36,9 +36,16 @@ func GetTeams(w http.ResponseWriter, r *http.Request) {
 	v := validation.New()
 	for i, _ := range query {
 		if !validation.In(i, "fivb", "country", "sort_by", "page", "page_size") {
-			w.WriteHeader(http.StatusBadRequest)
 			v.AddError("ValidQueryParameter", "Invalid query parameter")
 		}
+	}
+
+	if !v.Valid() {
+		w.WriteHeader(http.StatusBadRequest)
+		for key, message := range v.Errors {
+			fmt.Fprintf(w, "-%s: %s\n", key, message)
+		}
+		return
 	}
 
 	//parse page and page size parameters
@@ -51,7 +58,6 @@ func GetTeams(w http.ResponseWriter, r *http.Request) {
 	if pageStr != "" {
 		_, erro := strconv.Atoi(pageStr)
 		if erro != nil {
-			w.WriteHeader(http.StatusBadRequest)
 			v.AddError("PageValue", "Invalid page value")
 		}
 	}
@@ -64,11 +70,18 @@ func GetTeams(w http.ResponseWriter, r *http.Request) {
 	if pageSizeStr != "" {
 		_, erro := strconv.Atoi(pageSizeStr)
 		if erro != nil {
-			w.WriteHeader(http.StatusBadRequest)
+
 			v.AddError("PageSize", "Invalid page size value")
 		}
 	}
 
+	if !v.Valid() {
+		for key, message := range v.Errors {
+			fmt.Fprintf(w, "-%s: %s\n", key, message)
+		}
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
 	//offset
 	offset := (page - 1) * pageSize
 	// Taking instance of database
@@ -112,6 +125,7 @@ func GetTeams(w http.ResponseWriter, r *http.Request) {
 		db = db.Offset(offset).Limit(pageSize)
 
 		if !v.Valid() {
+			w.WriteHeader(http.StatusNotFound)
 			for key, message := range v.Errors {
 				fmt.Fprintf(w, "-%s: %s\n", key, message)
 			}
